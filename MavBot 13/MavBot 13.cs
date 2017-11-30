@@ -10,11 +10,11 @@ namespace cAlgo
     [Robot(TimeZone = TimeZones.UTC, AccessRights = AccessRights.None)]
     public class MavBot13 : Robot
     {
-        [Parameter("Lot Size",DefaultValue = 0.01)]
+        [Parameter("Lot Size", DefaultValue = 0.01)]
         public double _LotSize { get; set; }
-        [Parameter("SL",DefaultValue = 10)]
+        [Parameter("SL", DefaultValue = 10)]
         public double _SL { get; set; }
-        [Parameter("TP",DefaultValue = 10)]
+        [Parameter("TP", DefaultValue = 10)]
         public double _TP { get; set; }
         [Parameter("Stochastics", DefaultValue = "----------")]
         public string _StringStochastics { get; set; }
@@ -24,11 +24,11 @@ namespace cAlgo
         public int _SODP { get; set; }
         [Parameter("SO Slowing", DefaultValue = 3)]
         public int _SOKS { get; set; }
-        [Parameter("SO Overbought",DefaultValue = 80)]
+        [Parameter("SO Overbought", DefaultValue = 80)]
         public double _SOOB { get; set; }
-        [Parameter("SO Oversold",DefaultValue = 20)]
+        [Parameter("SO Oversold", DefaultValue = 20)]
         public double _SOOS { get; set; }
-        [Parameter("ATR",DefaultValue = "----------")]
+        [Parameter("ATR", DefaultValue = "----------")]
         public string _StringATR { get; set; }
         [Parameter("ATR Periods", DefaultValue = 14)]
         public int _ATRPeriods { get; set; }
@@ -41,7 +41,7 @@ namespace cAlgo
 
         private double _ATRinPips
         {
-           get { return _ATR.Result.LastValue / Symbol.PipSize; }
+            get { return _ATR.Result.LastValue / Symbol.PipSize; }
         }
 
         private bool ZeroPos
@@ -115,14 +115,14 @@ namespace cAlgo
 
         private void ExecuteTrade(TradeType _tt, string _message = "Order Executed.")
         {
-            TradeResult _TR = ExecuteMarketOrder(_tt,Symbol,Symbol.NormalizeVolume(Symbol.QuantityToVolume(_LotSize)),_Label,_SL,_TP);
+            TradeResult _TR = ExecuteMarketOrder(_tt, Symbol, Symbol.NormalizeVolume(Symbol.QuantityToVolume(_LotSize)), _Label, _SL, _TP);
             if (_TR.IsSuccessful)
             {
                 Print(_message);
             }
             else
             {
-                Print("Error: {0}",_TR.Error);
+                Print("Error: {0}", _TR.Error);
                 Stop();
             }
         }
@@ -130,8 +130,8 @@ namespace cAlgo
         protected override void OnStart()
         {
             _Label = Symbol.Code + TimeFrame.ToString() + Server.Time.Ticks.ToString();
-            _ATR = Indicators.AverageTrueRange(_ATRPeriods,MovingAverageType.Simple);
-            _SO = Indicators.StochasticOscillator(_SOKP,_SOKS,_SODP,MovingAverageType.Simple);
+            _ATR = Indicators.AverageTrueRange(_ATRPeriods, MovingAverageType.Simple);
+            _SO = Indicators.StochasticOscillator(_SOKP, _SOKS, _SODP, MovingAverageType.Simple);
 
             Print("Bot Rules:");
             Print("Buys or Sell on Stochastic Oscillator Oversold/Overbought parameters filtered by ATR range.");
@@ -153,17 +153,16 @@ namespace cAlgo
                             {
                                 if (Signal().Value)
                                 {
-                                    ExecuteTrade(TradeType.Buy, String.Format("Order Executed | Data for Reference: SO PercentK: {0}, ATR: {1}", Math.Round(_SO.PercentK.LastValue,2),Math.Round(_ATR.Result.LastValue/Symbol.PipSize,2)));
+                                    ExecuteTrade(TradeType.Buy, String.Format("Order Executed | Data for Reference: SO PercentK: {0}, ATR: {1}", Math.Round(_SO.PercentK.LastValue, 2), Math.Round(_ATR.Result.LastValue / Symbol.PipSize, 2)));
                                 }
                                 else
                                 {
-                                    ExecuteTrade(TradeType.Sell, String.Format("Order Executed | Data for Reference: SO PercentK: {0}, ATR: {1}", Math.Round(_SO.PercentK.LastValue, 2), Math.Round(_ATR.Result.LastValue/Symbol.PipSize, 2)));
+                                    ExecuteTrade(TradeType.Sell, String.Format("Order Executed | Data for Reference: SO PercentK: {0}, ATR: {1}", Math.Round(_SO.PercentK.LastValue, 2), Math.Round(_ATR.Result.LastValue / Symbol.PipSize, 2)));
                                 }
                             }
                         }
                     }
-                }
-                catch (Exception ex)
+                } catch (Exception ex)
                 {
                     Print(ex.InnerException);
                     Print(ex.Message);
