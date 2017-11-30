@@ -135,6 +135,7 @@ namespace cAlgo
 
             Print("Bot Rules:");
             Print("Buys or Sell on Stochastic Oscillator Oversold/Overbought parameters filtered by ATR range.");
+            Print("First Version | Needs Feedback.");
             Print("*****************************************");
         }
 
